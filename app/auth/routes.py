@@ -7,11 +7,13 @@ from app.auth.security import verify_password
 from app.auth.jwt_handler import create_access_token
 from app.users.repository import get_user_by_email
 
+# Roteador para endpoints de autenticação, incluindo login e geração de tokens JWT.
 router = APIRouter(
     prefix="/auth",
     tags=["auth"]
 )
 
+# Endpoint para autenticação de usuários e geração de tokens JWT. Recebe as credenciais do usuário, verifica a validade e, se forem válidas, gera um token de acesso.
 @router.post("/login", response_model=TokenResponse)
 def login(credentials: LoginRequest, db: Session = Depends(get_db)) -> TokenResponse:
     
