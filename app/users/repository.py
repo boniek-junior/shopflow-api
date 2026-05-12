@@ -28,7 +28,12 @@ def create_user(
     
     ''' Cria um novo usuário no banco de dados. '''
     
-    user = User(**user_data)
+    user = User(
+    name = name, 
+    email = email, 
+    password = password
+)
+    
     db.add(user)
     db.commit()
     db.refresh(user)

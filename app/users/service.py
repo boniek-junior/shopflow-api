@@ -26,13 +26,9 @@ def create_user_service(
     
     hashed_password = hash_password(user.password)
     
-    user_data = UserCreate(
-        nome=user.nome,
+    return create_user(
+        db,
+        name=user.name,
         email=user.email,
         password=hashed_password
-    )
-    
-    return create_user(
-        db, 
-        user_data
     )
