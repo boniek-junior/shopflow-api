@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
 
 from app.core.database import Base
 
@@ -14,3 +15,5 @@ class User(Base):
     email = Column(String, unique=True, nullable=False)
 
     password = Column(String, nullable=False)
+
+    cart = relationship('Cart', back_populates='user', uselist=False)
