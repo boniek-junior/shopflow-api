@@ -2,6 +2,7 @@ from logging.config import fileConfig
 
 from app.core.database import Base
 from app.users.models import User
+from app.products.models import Product
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
