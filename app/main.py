@@ -21,6 +21,10 @@ app.include_router(products_router)
 from app.cart.routes import router as cart_router
 app.include_router(cart_router)
 
+# Inclusão dos routers para pedidos.
+from app.orders.routes import router as orders_router
+app.include_router(orders_router)
+
 # Endpoint raiz para verificar se a API está funcionando.
 @app.get("/")
 def root():

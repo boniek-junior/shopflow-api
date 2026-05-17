@@ -58,7 +58,7 @@ Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
 ```env
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/shopflow
 SECRET_KEY=sua-chave-secreta-aqui
-ALGORITHM=HS256
+ALGORITHM=HS256 
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 ```
 
