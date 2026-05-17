@@ -7,7 +7,7 @@ from app.orders.models import Order, OrderItem
 # Função para criar um novo pedido no banco de dados.
 def create_order(db: Session, user_id: int, status: str, total: float) -> Order:
     """Cria um novo pedido no banco de dados."""
-    new_order = Order(user_id=user_id, status="Pendente", total=total)
+    new_order = Order(user_id=user_id, status="pendente", total=total)
     db.add(new_order)
     db.commit()
     db.refresh(new_order)
