@@ -1,10 +1,21 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 # Criação da aplicação FastAPI e inclusão dos routers de usuários e autenticação.
 app = FastAPI(
     title="ShopFlow API",
     version="1.0.0"
 )
+
+# Configuração do CORS para permitir requisições do frontend.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # Permitir apenas o frontend local
+    allow_credentials=True,
+    allow_methods=["*"],  # Permitir todos os métodos HTTP
+    allow_headers=["*"],  # Permitir todos os headers
+)
+
 # Inclusão dos routers para usuários.
 from app.users.routes import router as users_router
 app.include_router(users_router)
