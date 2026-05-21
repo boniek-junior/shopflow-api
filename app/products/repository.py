@@ -1,12 +1,22 @@
 from sqlalchemy.orm import Session
 from app.products.models import Product
 
+
 # Repository de produtos, responsável por interagir com o banco de dados para operações relacionadas a produtos.
 
 # Função para recuperar todos os produtos ativos do banco de dados.
-def get_all_products(db: Session) -> list[Product]:
+def get_all_products(db: Session, offset: int = 0, limit: int = 10) -> list[Product]:
     ''' Recupera todos os produtos do banco de dados. '''
-    return db.query(Product).filter(Product.is_active == True).all()
+
+    # Query base filtrando apenas produtos ativos
+    query = db.query(Product).filter(Product.is_active == True)
+
+    # Conta o total de produtos ativos para fins de paginação
+    total = query.count()
+
+    # Produtos da página atual usando offset e limit para paginação
+    products = query.offset(offset).limit(limit).all()
+    return products
 
 # Função para recuperar um produto específico do banco de dados com base no ID.
 def get_product_by_id(db: Session, product_id: int) -> Product:
@@ -29,7 +39,7 @@ def create_product(db: Session, name: str, description: str, price: int, stock: 
     db.refresh(product)
     return product
 
-# Função para atualizar um produto existente no banco de dados.
+# Função para deletar um produto do banco de dados. Na verdade, marca o produto como inativo para manter o histórico.
 def delete_product(db: Session, product_id: int) -> None:
     ''' Deleta um produto do banco de dados. '''
     

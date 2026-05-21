@@ -5,6 +5,8 @@ from app.orders.repository import create_order, create_order_item, get_orders_by
 from app.cart.repository import get_cart_by_user_id, remove_item_from_cart
 from app.products.repository import get_product_by_id
 
+from app.shared.exceptions import NotFoundException, BadRequestException, UnauthorizedException, ForbiddenException
+
 # Serviços para manipular a lógica de negócios relacionada aos pedidos, incluindo a criação de pedidos, adição de itens ao pedido e recuperação de pedidos.
 # 1. Valida o carrinho
 # 2. Valida estoque de cada produto
@@ -20,17 +22,17 @@ def checkout_service(db: Session, user_id: int):
 
     # Valida se o carrinho existe e não está vazio
     if not cart or not cart.items:
-        raise HTTPException(status_code=400, detail="Carrinho vazio")
+        raise BadRequestException(detail="Carrinho vazio")
 
     # Valida estoque de todos os produtos antes de criar o pedido
     for item in cart.items:
         product = get_product_by_id(db, item.product_id)
 
         if not product or not product.is_active:
-            raise HTTPException(status_code=404, detail=f"Produto com ID {item.product_id} não encontrado")
+            raise NotFoundException(detail=f"Produto com ID {item.product_id} não encontrado")
      
         if product.stock < item.quantity:
-            raise HTTPException(status_code=400, detail=f"Estoque insuficiente para o produto {product.name}")
+            raise BadRequestException(detail=f"Estoque insuficiente para o produto {product.name}")
 
     # Calcula o total do pedido
     total = sum(get_product_by_id(db, item.product_id).price * item.quantity for item in cart.items)
@@ -71,10 +73,10 @@ def get_order_by_id_service(db: Session, order_id: int, user_id: int):
 
     # Valida se o pedido existe
     if not order:
-        raise HTTPException(status_code=404, detail="Pedido não encontrado")
+        raise NotFoundException(detail="Pedido não encontrado")
     
     # Valida se o pedido pertence ao usuário autenticado
     if order.user_id != user_id:
-        raise HTTPException(status_code=403, detail="Acesso negado ao pedido")
+        raise ForbiddenException(detail="Acesso negado ao pedido")
 
     return order

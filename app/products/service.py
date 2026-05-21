@@ -9,6 +9,9 @@ from app.products.repository import (
     delete_product
 )
 
+from app.shared.exceptions import NotFoundException, BadRequestException, UnauthorizedException, ForbiddenException
+from app.shared.pagination import PaginationParams, PaginatedResponse
+
 # Serviço de produtos, responsável por implementar a lógica de negócios relacionada a produtos.
 
 # Serviço para recuperar todos os produtos ativos do banco de dados.
@@ -26,7 +29,7 @@ def get_product_by_id_service(db: Session, product_id: int) -> ProductCreate:
     product = get_product_by_id(db, product_id)
     
     if not product or not product.is_active:
-        raise HTTPException(status_code=404, detail="Produto não encontrado")
+        raise NotFoundException(detail="Produto não encontrado")
     return product
 
 # Serviço para criar um novo produto no banco de dados.
@@ -50,6 +53,6 @@ def delete_product_service(db: Session, product_id: int) -> None:
    product = get_product_by_id(db, product_id)
   
    if not product or not product.is_active:
-        raise HTTPException(status_code=404, detail="Produto não encontrado")
+        raise NotFoundException(detail="Produto não encontrado")
    
    delete_product(db, product_id)

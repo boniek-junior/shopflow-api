@@ -6,6 +6,8 @@ from app.users.repository import get_user_by_email, create_user
 
 from app.auth.security import hash_password
 
+from app.shared.exceptions import BadRequestException, NotFoundException, UnauthorizedException, ForbiddenException
+
 # Serviço de usuários, responsável por implementar a lógica de negócios relacionada a usuários.
 
 # Serviço para criar um novo usuário. Verifica se o email já existe e, se não, cria o usuário.
@@ -19,10 +21,7 @@ def create_user_service(
     existing_user = get_user_by_email(db, user.email)
    
     if existing_user:
-        raise HTTPException(
-            status_code=400,
-            detail="Email já registrado"
-        )
+        raise BadRequestException(detail="Email já registrado")
     
     hashed_password = hash_password(user.password)
     
