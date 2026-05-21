@@ -1,3 +1,4 @@
+import math
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
@@ -19,15 +20,14 @@ def get_all_products_service(db: Session, params: PaginationParams) -> Paginated
     
     ''' Serviço para recuperar todos os produtos ativos do banco de dados. '''
     
-    products = get_all_products(db, offset=params.offset, limit=params.page_size)
-    total = get_all_products_count(db)
+    products, total = get_all_products(db, offset=params.offset, limit=params.page_size)
 
     return PaginatedResponse(
         items=products,
         total=total,
         page=params.page,
         page_size=params.page_size,
-        total_pages=(total + params.page_size - 1) // params.page_size
+        total_pages=math.ceil(total / params.page_size) if total > 0 else 1
     )
 
 # Serviço para recuperar um produto específico do banco de dados com base no ID.
@@ -64,4 +64,4 @@ def delete_product_service(db: Session, product_id: int) -> None:
    if not product or not product.is_active:
         raise NotFoundException(detail="Produto não encontrado")
    
-   delete_product(db, product_id)
+   delete_product(db, product)
