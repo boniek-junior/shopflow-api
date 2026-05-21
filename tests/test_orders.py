@@ -37,8 +37,8 @@ def test_checkout_success(cart_with_item):
 def test_checkout_decreases_stock(cart_with_item):
     # Pega o produto antes do checkout
     products = cart_with_item.get("/products/")
-    product_id = products.json()[0]["id"]
-    stock_before = products.json()[0]["stock"]
+    product_id = products.json()["items"][0]["id"]
+    stock_before = products.json()["items"][0]["stock"]
 
     # Faz o checkout
     cart_with_item.post("/orders/checkout")

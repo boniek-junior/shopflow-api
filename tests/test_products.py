@@ -3,7 +3,9 @@ def test_get_products(client):
     response = client.get("/products/")
 
     assert response.status_code == 200
-    assert isinstance(response.json(), list)
+    assert "items" in response.json()
+    assert "total" in response.json()
+    assert isinstance(response.json()["items"], list)
 
 
 # Testa a criação de um produto com usuário autenticado
