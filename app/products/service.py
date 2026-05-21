@@ -15,11 +15,20 @@ from app.shared.pagination import PaginationParams, PaginatedResponse
 # Serviço de produtos, responsável por implementar a lógica de negócios relacionada a produtos.
 
 # Serviço para recuperar todos os produtos ativos do banco de dados.
-def get_all_products_service(db: Session) -> list[ProductCreate]:
+def get_all_products_service(db: Session, params: PaginationParams) -> PaginatedResponse[ProductCreate]:
     
     ''' Serviço para recuperar todos os produtos ativos do banco de dados. '''
     
-    return get_all_products(db)
+    products = get_all_products(db, offset=params.offset, limit=params.page_size)
+    total = get_all_products_count(db)
+
+    return PaginatedResponse(
+        items=products,
+        total=total,
+        page=params.page,
+        page_size=params.page_size,
+        total_pages=(total + params.page_size - 1) // params.page_size
+    )
 
 # Serviço para recuperar um produto específico do banco de dados com base no ID.
 def get_product_by_id_service(db: Session, product_id: int) -> ProductCreate:

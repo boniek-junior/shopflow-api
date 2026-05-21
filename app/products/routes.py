@@ -12,6 +12,8 @@ from app.products.service import (
     delete_product_service
 )
 
+from app.shared.pagination import PaginationParams, PaginatedResponse
+
 # Roteador para endpoints de produtos, incluindo criação, recuperação e exclusão de produtos.
 router = APIRouter(
     prefix="/products",
@@ -19,12 +21,12 @@ router = APIRouter(
 )
 
 # Endpoint para recuperar todos os produtos ativos do banco de dados. Retorna uma lista de produtos.
-@router.get("/", response_model=list[ProductResponse])
-def get_all_products(db: Session = Depends(get_db)):
+@router.get("/", response_model=PaginatedResponse[ProductResponse])
+def get_all_products(params: PaginationParams = Depends(), db: Session = Depends(get_db)):
     
     ''' Endpoint para recuperar todos os produtos ativos do banco de dados. Retorna uma lista de produtos. '''
     
-    return get_all_products_service(db)
+    return get_all_products_service(db, params)
 
 # Endpoint para recuperar um produto específico do banco de dados com base no ID. Retorna os detalhes do produto.
 @router.get("/{product_id}", response_model=ProductResponse)

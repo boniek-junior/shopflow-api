@@ -4,7 +4,7 @@ from typing import TypeVar, Generic, List
 T = TypeVar('T')
 
 
-# Schema genérico de paginação — funciona para qualquer tipo de dado
+# Schema genérico de paginação, funciona para qualquer tipo de dado
 class PaginatedResponse(BaseModel, Generic[T]):
     items: List[T]        # lista de itens da página atual
     total: int            # total de registros no banco
